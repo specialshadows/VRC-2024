@@ -1,26 +1,41 @@
 #include "subsystems.h"
-
 using namespace vex;
 
-
 // scoring subsystem implementation
+ScoringSubsystem::ScoringSubsystem(
+    motor &motor1,
+    motor &miniMotor1,
+    motor &miniMotor2
+) : _motor1(motor1),
+    _miniMotor1(miniMotor1),
+    _miniMotor2(miniMotor2) {}
 
-ScoringSubsystem::ScoringSubsystem(motor &motor1, motor &motor2) :
-    _motor1(motor1), _motor2(motor2) {}
-
+// Stop all motors
 void ScoringSubsystem::system_default() {
     _motor1.stop();
-    _motor2.stop();
+    _miniMotor1.stop();
+    _miniMotor2.stop();
 }
 
-void ScoringSubsystem::intake() {
-    _motor1.spin(forward, 100, percent);
-    _motor2.spin(forward, 100, percent);
+// Score top goal (R1)
+void ScoringSubsystem::intakeTop() {
+    _miniMotor1.spin(reverse, 100, percent);
+    _motor1.spin(forward, 67, percent);  
+    _miniMotor2.spin(forward, 100, percent);
 }
 
+// Score middle goal (R2)
+void ScoringSubsystem::intakeMiddle() {
+    _miniMotor2.spin(forward, 100, percent); 
+    _motor1.spin(forward, 67, percent);      
+    _miniMotor1.spin(forward, 100, percent);
+}
+
+// Eject (B)
 void ScoringSubsystem::eject() {
-    _motor1.spin(reverse, 100, percent);
-    _motor2.spin(reverse, 100, percent);
+    _miniMotor1.spin(forward, 73, percent);
+    _miniMotor2.spin(reverse, 73, percent);  
+    _motor1.spin(reverse, 67, percent);    
 }
 
 // descore subsystem implementation
